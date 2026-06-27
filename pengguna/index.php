@@ -467,7 +467,7 @@ $total_distribusi = $data_distribusi['total_distribusi'];
                                 <th>Stok</th>
                                 <th>Limit Stok</th>
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
-                                <th>Aksi</th>
+                                
                                 <?php } ?>
                             </tr>
                         </thead>
@@ -501,17 +501,7 @@ $total_distribusi = $data_distribusi['total_distribusi'];
                                 <td><span class="text-muted"><?= $row['limit_stok']; ?></span></td>
 
                                 <?php if ($_SESSION['role'] == 'admin') { ?>
-                                <td>
-                                    <div class="d-flex gap-1">
-                                        <a href="edit_barang.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm">
-                                            Edit
-                                        </a>
-                                        <a href="hapus_barang.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Hapus data?')">
-                                            Hapus
-                                        </a>
-                                    </div>
-                                </td>
+                                
                                 <?php } ?>
                             </tr>
                             <?php } ?>

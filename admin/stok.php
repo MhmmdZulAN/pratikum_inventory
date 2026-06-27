@@ -13,6 +13,52 @@ if (isset($_POST['update_stok'])) {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id     = (int)$_POST['id'];
+    $aksi   = $_POST['aksi'];
+    $jumlah = (int)$_POST['jumlah'];
+
+    if ($aksi === 'tambah') {
+    $query = "UPDATE barang SET 
+                stok = stok + $jumlah,
+                status_id = CASE
+                    WHEN (stok + $jumlah) = 0 THEN 2
+                    WHEN (stok + $jumlah) > 0 AND (stok + $jumlah) <= limit_stok THEN 3
+                    ELSE 1
+                END
+              WHERE id = $id";
+} elseif ($aksi === 'kurang') {
+    $query = "UPDATE barang SET 
+                stok = GREATEST(0, stok - $jumlah),
+                status_id = CASE
+                    WHEN GREATEST(0, stok - $jumlah) = 0 THEN 2
+                    WHEN GREATEST(0, stok - $jumlah) > 0 AND GREATEST(0, stok - $jumlah) <= limit_stok THEN 3
+                    ELSE 1
+                END
+              WHERE id = $id";
+}
+mysqli_query($conn, $query);
+
+    // Ambil stok & limit TERBARU setelah diupdate
+    $cek = mysqli_fetch_assoc(mysqli_query($conn, "SELECT stok, limit_stok FROM barang WHERE id = $id"));
+    $stok       = $cek['stok'];
+    $limit_stok = $cek['limit_stok'];
+
+    // Update status otomatis
+    if ($stok == 0) {
+        $status_id = 2; // Habis
+    } elseif ($stok > 0 && $stok <= $limit_stok) {
+        $status_id = 3; // Menipis
+    } else {
+        $status_id = 1; // Tersedia
+    }
+
+    mysqli_query($conn, "UPDATE barang SET status_id = $status_id WHERE id = $id");
+
+    header("Location: stok.php?pesan=berhasil");
+    exit;
+}
+
 // AMBIL DATA BARANG + SINKRONISASI INNER JOIN
 $query_barang = "SELECT b.id, b.nama_barang, b.stok, b.limit_stok, p.nama_penyimpanan 
                  FROM barang b 

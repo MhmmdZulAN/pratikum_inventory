@@ -2,30 +2,45 @@
 session_start();
 include '../koneksi.php';
 
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
+if ($_SESSION['role'] != 'admin') {
     die("Akses ditolak");
 }
 
 $id = $_GET['id'];
 
-// Mengambil data barang berdasarkan ID
-$data = mysqli_query($koneksi, "SELECT * FROM barang WHERE id='$id'");
+$data = mysqli_query($koneksi, "
+SELECT * FROM barang
+WHERE id='$id'
+");
+
 $row = mysqli_fetch_assoc($data);
 
-if (isset($_POST['update'])) {
-    $nama               = $_POST['nama'];
-    $status_barang      = $_POST['status_barang'];
-    $penyimpanan_barang = $_POST['penyimpanan_barang'];
-    $harga              = $_POST['harga'];
+$status = mysqli_query(
+    $koneksi,
+    " SELECT * FROM status_barang"
+);
 
-    // Update data langsung ke kolom teks masing-masing
+$penyimpanan = mysqli_query(
+    $koneksi,
+    "SELECT * FROM penyimpanan"
+);
+
+if (isset($_POST['update'])) {
+
+    $nama           = $_POST['nama'];
+    $status_id      = $_POST['status'];
+    $penyimpanan_id = $_POST['penyimpanan'];
+    $harga          = $_POST['harga'];
+
     mysqli_query($koneksi, "
-        UPDATE barang SET
-        nama_barang='$nama',
-        status_barang='$status_barang',
-        penyimpanan_barang='$penyimpanan_barang',
-        harga_barang='$harga'
-        WHERE id='$id'
+    UPDATE barang SET
+
+    nama_barang='$nama',
+    status_id='$status_id',
+    penyimpanan_id='$penyimpanan_id',
+    harga_barang='$harga'
+
+    WHERE id='$id'
     ");
 
     echo "
@@ -39,60 +54,137 @@ if (isset($_POST['update'])) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Edit Barang</title>
+
     <link rel="stylesheet" href="../AdminLTE-4.0.0-rc7/dist/css/adminlte.css">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
+
 <body class="bg-light">
 
     <div class="container mt-5">
+
         <div class="row justify-content-center">
+
             <div class="col-md-6">
+
                 <div class="card card-warning card-outline">
+
                     <div class="card-header">
-                        <h3 class="card-title">Edit Barang</h3>
+                        <h3 class="card-title">
+                            Edit Barang
+                        </h3>
                     </div>
 
                     <form method="POST">
+
                         <div class="card-body">
+
+                            <!-- Nama Barang -->
                             <div class="mb-3">
+
                                 <label>Nama Barang</label>
-                                <input type="text" name="nama" class="form-control" value="<?= $row['nama_barang']; ?>" required>
+
+                                <input type="text" name="nama" class="form-control" value="<?= $row['nama_barang']; ?>"
+                                    required>
+
                             </div>
 
+                            <!-- Status -->
                             <div class="mb-3">
+
                                 <label>Status Barang</label>
-                                <select name="status_barang" class="form-control">
-                                    <option value="Tersedia" <?= ($row['status_barang'] == 'Tersedia') ? 'selected' : ''; ?>>Tersedia</option>
-                                    <option value="Dipinjam" <?= ($row['status_barang'] == 'Dipinjam') ? 'selected' : ''; ?>>Dipinjam</option>
-                                    <option value="Habis" <?= ($row['status_barang'] == 'Habis') ? 'selected' : ''; ?>>Habis</option>
+
+                                <select name="status" class="form-control">
+
+                                    <?php
+                                    while ($s = mysqli_fetch_assoc($status)) {
+                                    ?>
+
+                                        <option value="<?= $s['id']; ?>" <?php
+                                                                            if ($row['status_id'] == $s['id']) {
+                                                                                echo "selected";
+                                                                            }
+                                                                            ?>>
+
+                                            <?= $s['nama_status']; ?>
+
+                                        </option>
+
+                                    <?php } ?>
+
                                 </select>
+
                             </div>
 
+                            <!-- Penyimpanan -->
                             <div class="mb-3">
+
                                 <label>Penyimpanan</label>
-                                <select name="penyimpanan_barang" class="form-control">
-                                    <option value="Gudang A" <?= ($row['penyimpanan_barang'] == 'Gudang A') ? 'selected' : ''; ?>>Gudang A</option>
-                                    <option value="Gudang B" <?= ($row['penyimpanan_barang'] == 'Gudang B') ? 'selected' : ''; ?>>Gudang B</option>
+
+                                <select name="penyimpanan" class="form-control">
+
+                                    <?php
+                                    while ($p = mysqli_fetch_assoc($penyimpanan)) {
+                                    ?>
+
+                                        <option value="<?= $p['id']; ?>" <?php
+                                                                            if ($row['penyimpanan_id'] == $p['id']) {
+                                                                                echo "selected";
+                                                                            }
+                                                                            ?>>
+
+                                            <?= $p['nama_penyimpanan']; ?>
+
+                                        </option>
+
+                                    <?php } ?>
+
                                 </select>
+
                             </div>
 
+                            <!-- Harga -->
                             <div class="mb-3">
+
                                 <label>Harga Barang</label>
-                                <input type="number" name="harga" class="form-control" value="<?= $row['harga_barang']; ?>" required>
+
+                                <input type="number" name="harga" class="form-control"
+                                    value="<?= $row['harga_barang']; ?>" required>
+
                             </div>
+
                         </div>
 
                         <div class="card-footer">
-                            <button type="submit" name="update" class="btn btn-warning">Update</button>
-                            <a href="index.php" class="btn btn-secondary">Kembali</a>
+
+                            <button type="submit" name="update" class="btn btn-warning">
+
+                                Update
+
+                            </button>
+
+                            <a href="index.php" class="btn btn-secondary">
+
+                                Kembali
+
+                            </a>
+
                         </div>
+
                     </form>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
 </body>
+
 </html>

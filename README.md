@@ -1,5 +1,6 @@
 
 PROFIL SINGKAT
+
 CV. Pelindung Sepatu Kita (DryStep) adalah perusahaan manufaktur dan perdagangan modern yang bergerak dalam penyediaan solusi perlengkapan outdoor dan otomotif yang adaptif terhadap kondisi cuaca ekstrem di Indonesia. Perusahaan mengintegrasikan kegiatan desain, produksi mandiri menggunakan material PVC elastis kedap air, hingga strategi pemasaran berbasis omnichannel.  
 Dibuat sebagai respons atas tingginya mobilitas masyarakat urban—khususnya pengendara sepeda motor, pekerja, dan pelajar—DryStep hadir memberikan perlindungan optimal agar sepatu tetap kering, bersih, dan bebas dari kerusakan akibat air hujan atau lumpur. Dengan keunggulan material PVC yang tebal, fitur resleting anti-karat, karet pengencang elastis, serta sol anti-selip, DryStep memposisikan diri sebagai produk esensial yang mengutamakan ketahanan, kenyamanan, kebersihan penampilan, dan keamanan penggunanya.
 
